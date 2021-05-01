@@ -1,0 +1,10 @@
+#view1 {
+    position: fixed;
+    top : 0px;
+    left : 0px;
+}
+#view2 {
+    position: fixed;
+    top : 0px;
+    right : 0px;
+}
