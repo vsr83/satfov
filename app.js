@@ -96,6 +96,8 @@ let guiControls = new function()
     this.targetY = 0;
     this.targetZ = 0;
     this.panning = false;
+    this.camUpDecl = 90;
+    this.camUpAngle = 0;
 }
 
 let gui = new dat.GUI();
@@ -130,6 +132,8 @@ cameraFolder.add(guiControls, 'panning')
 let targetX = cameraFolder.add(guiControls, 'targetX', -earthRadius * 1.1, earthRadius * 1.1, 1);
 let targetY = cameraFolder.add(guiControls, 'targetY', -earthRadius * 1.1, earthRadius * 1.1, 1);
 let targetZ = cameraFolder.add(guiControls, 'targetZ', -earthRadius * 1.1, earthRadius * 1.1, 1);
+let camUpAngle = cameraFolder.add(guiControls, 'camUpAngle', -90, 90, 1);
+let camUpDecl = cameraFolder.add(guiControls, 'camUpDecl', -180, 180, 1);
 
 let cameraActions = { 
     center : function() 
@@ -152,7 +156,8 @@ let presets = {
         targetY.setValue(0);
         targetZ.setValue(0);
         lockFovControl.setValue(true);
-        controls1.rotateTo();
+        camUpAngle.setValue(0);
+        camUpDecl.setValue(93);
     },
     himawari8 : function() 
     {
@@ -162,6 +167,8 @@ let presets = {
         targetX.setValue(0);
         targetY.setValue(0);
         targetZ.setValue(0);
+        camUpAngle.setValue(0);
+        camUpDecl.setValue(90);
         lockFovControl.setValue(true);
     },
     issScandinavia : function()
@@ -169,11 +176,13 @@ let presets = {
         distControl.setValue(6765);
         latControl.setValue(51.8);
         lonControl.setValue(9.7);
-        targetX.setValue(3276);
-        targetY.setValue(817);
-        targetZ.setValue(5403);
+        targetX.setValue(3290);
+        targetY.setValue(800);
+        targetZ.setValue(5440);
+        camUpAngle.setValue(10);
+        camUpDecl.setValue(40);
         lockFovControl.setValue(false);
-        fovControl.setValue(53.2);
+        fovControl.setValue(53.2-1.2);
     }
 };
 presetFolder.add(presets, 'blueMarble72');
@@ -247,6 +256,11 @@ function render()
     controls1.target.x = guiControls.targetX;
     controls1.target.y = guiControls.targetY;
     controls1.target.z = guiControls.targetZ;
+    let camUpDecl = deg2rad(guiControls.camUpDecl);
+    let camUpAngle = deg2rad(guiControls.camUpAngle);
+    camera1.up.x = Math.cos(camUpAngle) * Math.cos(camUpDecl);
+    camera1.up.y = Math.sin(camUpAngle) * Math.cos(camUpDecl);
+    camera1.up.z = Math.sin(camUpDecl);
     fovControl.setValue(guiControls.fov);
 
     camera1.updateProjectionMatrix();
@@ -263,4 +277,4 @@ function render()
 }
 
 render();
-presets.blueMarble72();
+presets.himawari8();
